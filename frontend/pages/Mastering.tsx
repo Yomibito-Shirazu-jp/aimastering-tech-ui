@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { UploadDropzone } from '../components/UploadDropzone';
 import { DspParamsEditor } from '../components/DspParamsEditor';
 import { AnalysisResultView } from '../components/AnalysisResultView';
 import { DeliberationResultView } from '../components/DeliberationResultView';
 import { MasteringState, ProcessingRoute, MasterJobRequest, DspParams, ApiResponse, AnalysisResult, DeliberationOutput } from '../types';
 import { DEFAULT_DSP_PARAMS } from '../constants';
-import { mockUploadFile, mockSubmitMasteringJob } from '../services/apiClient';
+import { uploadFile, submitMasteringJob } from '../services/apiClient';
 import { Settings2, ChevronDown, ChevronUp, Play, Download, FileAudio, Loader2, AlertCircle, CheckCircle2, BrainCircuit, Sliders } from 'lucide-react';
 
 const PROCESSING_STEPS = [
-  "音源をアップロード中...",
-  "ラウドネスと帯域バランスを解析中...",
-  "AI合議でマスタリング方針を検討中...",
-  "DSPパラメータを決定中...",
-  "マスタリングWAVを生成中...",
-  "ダウンロード準備中..."
+  "髻ｳ貅舌ｒ繧｢繝・・繝ｭ繝ｼ繝我ｸｭ...",
+  "繝ｩ繧ｦ繝峨ロ繧ｹ縺ｨ蟶ｯ蝓溘ヰ繝ｩ繝ｳ繧ｹ繧定ｧ｣譫蝉ｸｭ...",
+  "AI蜷郁ｭｰ縺ｧ繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ譁ｹ驥昴ｒ讀懆ｨ惹ｸｭ...",
+  "DSP繝代Λ繝｡繝ｼ繧ｿ繧呈ｱｺ螳壻ｸｭ...",
+  "繝槭せ繧ｿ繝ｪ繝ｳ繧ｰWAV繧堤函謌蝉ｸｭ...",
+  "繝繧ｦ繝ｳ繝ｭ繝ｼ繝画ｺ門ｙ荳ｭ..."
 ];
 
 export const Mastering: React.FC = () => {
@@ -66,10 +66,10 @@ export const Mastering: React.FC = () => {
       setErrorMsg(null);
       setResult(null);
       try {
-        currentUrl = await mockUploadFile(file, setUploadProgress);
+        currentUrl = await uploadFile(file, setUploadProgress);
         setAudioUrl(currentUrl);
       } catch (err: any) {
-        setErrorMsg("アップロードに失敗しました。");
+        setErrorMsg("繧｢繝・・繝ｭ繝ｼ繝峨↓螟ｱ謨励＠縺ｾ縺励◆縲・);
         setState('error');
         return;
       }
@@ -88,7 +88,7 @@ export const Mastering: React.FC = () => {
         manual_params: jobRoute === 'dsp_only' ? manualParams : null,
       };
 
-      const response = await mockSubmitMasteringJob(request);
+      const response = await submitMasteringJob(request);
 
       if (response.error) {
         throw new Error(response.error);
@@ -100,7 +100,7 @@ export const Mastering: React.FC = () => {
 
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || "処理中に予期せぬエラーが発生しました。");
+      setErrorMsg(err.message || "蜃ｦ逅・ｸｭ縺ｫ莠域悄縺帙〓繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・);
       setState('error');
     }
   };
@@ -134,8 +134,8 @@ export const Mastering: React.FC = () => {
         
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-white">マスタリングコンソール</h1>
-          <p className="text-zinc-400">楽曲をアップロードして、Concertmaster AIにお任せください。</p>
+          <h1 className="text-3xl font-bold tracking-tight text-white">繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ繧ｳ繝ｳ繧ｽ繝ｼ繝ｫ</h1>
+          <p className="text-zinc-400">讌ｽ譖ｲ繧偵い繝・・繝ｭ繝ｼ繝峨＠縺ｦ縲，oncertmaster AI縺ｫ縺贋ｻｻ縺帙￥縺縺輔＞縲・/p>
         </div>
 
         {/* Main Card */}
@@ -158,7 +158,7 @@ export const Mastering: React.FC = () => {
                 </div>
                 {state === 'uploaded' && (
                   <button onClick={resetApp} className="text-sm text-zinc-400 hover:text-white transition-colors">
-                    ファイルを変更
+                    繝輔ぃ繧､繝ｫ繧貞､画峩
                   </button>
                 )}
               </div>
@@ -171,12 +171,12 @@ export const Mastering: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Mode Selection */}
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-zinc-300">処理モード</label>
+                  <label className="text-sm font-medium text-zinc-300">蜃ｦ逅・Δ繝ｼ繝・/label>
                   <div className="space-y-2">
                     {[
-                      { id: 'full', label: '標準マスタリング', desc: 'AI分析とDSP処理を全自動で実行' },
-                      { id: 'analyze_only', label: '分析のみ', desc: '楽曲のオーディオ指標を取得' },
-                      { id: 'dsp_only', label: '高度なDSP設定', desc: 'マニュアルでパラメータを制御' }
+                      { id: 'full', label: '讓呎ｺ悶・繧ｹ繧ｿ繝ｪ繝ｳ繧ｰ', desc: 'AI蛻・梵縺ｨDSP蜃ｦ逅・ｒ蜈ｨ閾ｪ蜍輔〒螳溯｡・ },
+                      { id: 'analyze_only', label: '蛻・梵縺ｮ縺ｿ', desc: '讌ｽ譖ｲ縺ｮ繧ｪ繝ｼ繝・ぅ繧ｪ謖・ｨ吶ｒ蜿門ｾ・ },
+                      { id: 'dsp_only', label: '鬮伜ｺｦ縺ｪDSP險ｭ螳・, desc: '繝槭ル繝･繧｢繝ｫ縺ｧ繝代Λ繝｡繝ｼ繧ｿ繧貞宛蠕｡' }
                     ].map((mode) => (
                       <label key={mode.id} className={`flex items-start p-3 rounded-lg border cursor-pointer transition-all ${route === mode.id ? 'border-primary bg-primary/10' : 'border-zinc-800 hover:border-zinc-600 bg-zinc-900/50'}`}>
                         <input 
@@ -201,7 +201,7 @@ export const Mastering: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-zinc-300 flex justify-between">
-                        目標 LUFS <span className="text-zinc-500">{targetLufs} LUFS</span>
+                        逶ｮ讓・LUFS <span className="text-zinc-500">{targetLufs} LUFS</span>
                       </label>
                       <input 
                         type="range" min="-24" max="-6" step="0.1" 
@@ -211,7 +211,7 @@ export const Mastering: React.FC = () => {
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-zinc-300 flex justify-between">
-                        目標 True Peak <span className="text-zinc-500">{targetTruePeak} dBTP</span>
+                        逶ｮ讓・True Peak <span className="text-zinc-500">{targetTruePeak} dBTP</span>
                       </label>
                       <input 
                         type="range" min="-3" max="-0.1" step="0.1" 
@@ -228,7 +228,7 @@ export const Mastering: React.FC = () => {
                       className="flex items-center text-sm text-zinc-400 hover:text-white transition-colors"
                     >
                       <Settings2 size={16} className="mr-2" />
-                      詳細設定
+                      隧ｳ邏ｰ險ｭ螳・
                       {showAdvanced ? <ChevronUp size={16} className="ml-1" /> : <ChevronDown size={16} className="ml-1" />}
                     </button>
                     
@@ -243,7 +243,7 @@ export const Mastering: React.FC = () => {
                             className="rounded border-zinc-700 bg-zinc-900 text-primary focus:ring-primary"
                           />
                           <label htmlFor="deliberation_mode" className="text-sm text-zinc-300">
-                            開発者向け: AI合議のみ (DSPレンダリングをスキップ)
+                            髢狗匱閠・髄縺・ AI蜷郁ｭｰ縺ｮ縺ｿ (DSP繝ｬ繝ｳ繝繝ｪ繝ｳ繧ｰ繧偵せ繧ｭ繝・・)
                           </label>
                         </div>
                         
@@ -267,14 +267,14 @@ export const Mastering: React.FC = () => {
                 className="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-primary-hover text-white rounded-full font-semibold flex items-center justify-center transition-all transform hover:scale-105"
               >
                 <Play size={18} className="mr-2 fill-current" />
-                マスタリング開始
+                繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ髢句ｧ・
               </button>
             )}
 
             {state === 'uploading' && (
               <div className="w-full max-w-md space-y-2 text-center">
                 <div className="flex justify-between text-sm text-zinc-400">
-                  <span>アップロード中...</span>
+                  <span>繧｢繝・・繝ｭ繝ｼ繝我ｸｭ...</span>
                   <span>{uploadProgress}%</span>
                 </div>
                 <div className="w-full bg-zinc-800 rounded-full h-2 overflow-hidden">
@@ -302,11 +302,11 @@ export const Mastering: React.FC = () => {
               <div className="w-full p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex flex-col items-center text-center space-y-3">
                 <div className="flex items-center text-red-400">
                   <AlertCircle size={20} className="mr-2" />
-                  <span className="font-medium">処理に失敗しました</span>
+                  <span className="font-medium">蜃ｦ逅・↓螟ｱ謨励＠縺ｾ縺励◆</span>
                 </div>
                 <p className="text-sm text-red-300/80">{errorMsg}</p>
                 <button onClick={() => setState('uploaded')} className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-sm transition-colors">
-                  再試行
+                  蜀崎ｩｦ陦・
                 </button>
               </div>
             )}
@@ -316,13 +316,13 @@ export const Mastering: React.FC = () => {
                 <div className="flex flex-col items-center text-center">
                   <div className="flex items-center text-green-400 mb-2">
                     <CheckCircle2 size={28} className="mr-2" />
-                    <span className="text-xl font-bold">マスタリング完了</span>
+                    <span className="text-xl font-bold">繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ螳御ｺ・/span>
                   </div>
                   {route === 'full' && (
                     <div className="flex items-start mt-3 bg-zinc-900/50 border border-zinc-800 p-4 rounded-lg max-w-md text-left">
                       <BrainCircuit size={20} className="text-primary mt-0.5 mr-3 flex-shrink-0" />
                       <p className="text-sm text-zinc-300 leading-relaxed">
-                        このマスターは、音源分析結果をもとにAI合議システムがDSP方針を決定し、レンダリングされました。
+                        縺薙・繝槭せ繧ｿ繝ｼ縺ｯ縲・浹貅仙・譫千ｵ先棡繧偵ｂ縺ｨ縺ｫAI蜷郁ｭｰ繧ｷ繧ｹ繝・Β縺轡SP譁ｹ驥昴ｒ豎ｺ螳壹＠縲√Ξ繝ｳ繝繝ｪ繝ｳ繧ｰ縺輔ｌ縺ｾ縺励◆縲・
                       </p>
                     </div>
                   )}
@@ -334,7 +334,7 @@ export const Mastering: React.FC = () => {
                     className="w-full px-6 py-4 bg-secondary hover:bg-cyan-400 text-zinc-950 rounded-xl font-bold flex items-center justify-center transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]"
                   >
                     <Download size={20} className="mr-2" />
-                    マスタリング済みWAVをダウンロード
+                    繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ貂医∩WAV繧偵ム繧ｦ繝ｳ繝ｭ繝ｼ繝・
                   </button>
 
                   <div className="grid grid-cols-2 gap-3">
@@ -343,7 +343,7 @@ export const Mastering: React.FC = () => {
                       className="px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-medium flex items-center justify-center transition-colors text-sm"
                     >
                       <Sliders size={16} className="mr-2" />
-                      数値を変えてリマスタリング
+                      謨ｰ蛟､繧貞､峨∴縺ｦ繝ｪ繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ
                     </button>
 
                     <button 
@@ -351,7 +351,7 @@ export const Mastering: React.FC = () => {
                       className="px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-medium flex items-center justify-center transition-colors text-sm"
                     >
                       <BrainCircuit size={16} className="mr-2" />
-                      合議結果をみる
+                      蜷郁ｭｰ邨先棡繧偵∩繧・
                     </button>
                   </div>
 
@@ -360,7 +360,7 @@ export const Mastering: React.FC = () => {
                     className="w-full px-4 py-3 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white rounded-xl font-medium flex items-center justify-center transition-colors text-sm"
                   >
                     <FileAudio size={16} className="mr-2" />
-                    別の曲を処理する
+                    蛻･縺ｮ譖ｲ繧貞・逅・☆繧・
                   </button>
                 </div>
               </div>
@@ -380,21 +380,21 @@ export const Mastering: React.FC = () => {
                  className="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full font-medium transition-colors flex items-center"
                >
                   <Sliders size={16} className="mr-2" />
-                  数値を変えて再設定
+                  謨ｰ蛟､繧貞､峨∴縺ｦ蜀崎ｨｭ螳・
                 </button>
                <button 
                  onClick={() => runJob('full')} 
                  className="px-6 py-2 bg-primary hover:bg-primary-hover text-white rounded-full font-medium transition-colors flex items-center"
                >
                   <Play size={16} className="mr-2 fill-current" />
-                  この設定でマスタリングを実行
+                  縺薙・險ｭ螳壹〒繝槭せ繧ｿ繝ｪ繝ｳ繧ｰ繧貞ｮ溯｡・
                 </button>
                <button 
                  onClick={resetApp} 
                  className="px-6 py-2 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white rounded-full font-medium transition-colors flex items-center"
                >
                   <FileAudio size={16} className="mr-2" />
-                  別の曲を処理する
+                  蛻･縺ｮ譖ｲ繧貞・逅・☆繧・
                 </button>
             </div>
           </div>
@@ -404,3 +404,4 @@ export const Mastering: React.FC = () => {
     </div>
   );
 };
+
