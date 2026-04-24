@@ -1,4 +1,4 @@
-
+﻿
 /**
  * @license
  * Copyright 2025 Google LLC
@@ -14,8 +14,8 @@ import { WebSocketServer, WebSocket } from 'ws';
 const app = express();
 app.use(express.json({limit: process?.env?.API_PAYLOAD_MAX_SIZE || "7mb"}));
 
-const PORT = process?.env?.API_BACKEND_PORT || 5000;
-const API_BACKEND_HOST = process?.env?.API_BACKEND_HOST || "127.0.0.1";
+const PORT = process?.env?.PORT || process?.env?.API_BACKEND_PORT || 8080;
+const API_BACKEND_HOST = process?.env?.API_BACKEND_HOST || "0.0.0.0";
 
 const GOOGLE_CLOUD_LOCATION = process?.env?.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_CLOUD_PROJECT = process?.env?.GOOGLE_CLOUD_PROJECT;
@@ -23,11 +23,7 @@ if (!GOOGLE_CLOUD_PROJECT || !GOOGLE_CLOUD_LOCATION) {
   console.error("Error: Environment variables GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION must be set.");
   process.exit(1);
 }
-const PROXY_HEADER = process?.env?.PROXY_HEADER;
-if (!PROXY_HEADER) {
-  console.error("Error: Environment variables PROXY_HEADER must be set.");
-  process.exit(1);
-}
+const PROXY_HEADER = process?.env?.PROXY_HEADER || "";
 
 app.set('trust proxy', 1 /* number of proxies between user and server */);
 
@@ -451,5 +447,7 @@ server.on('upgrade', async (request, socket, head) => {
     socket.destroy();
   }
 });
+
+
 
 
